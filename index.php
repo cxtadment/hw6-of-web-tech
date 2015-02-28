@@ -17,6 +17,15 @@
 					   <input type="checkbox" name="conditions[]" value="4000">Very Good
 					   <input type="checkbox" name="conditions[]" value="5000">Good 
 					   <input type="checkbox" name="conditions[]" value="6000">Acceptable <br> 
+			Buying formats: <input type="checkbox" name="listingTypes[]" value="FixedPrice">Buy It Now
+							<input type="checkbox" name="listingTypes[]" value="Auction">Auction
+							<input type="checkbox" name="listingTypes[]" value="Classified">Classified Ads <br>
+			Seller: <input type="checkbox" name="returnAccept" value="true">Buy It Now <br>
+			Shipping: <div>
+						  <input type="checkbox" name="freeShipping" value="true">Free Shipping<br>
+						  <input type="checkbox" name="expeditedShopping" value="Expedited">Expedited shipping available<br>
+						  Max handling time(days): <input type="text" name="shippingTime"><br>
+					  </div>
 			<input type="submit" name="submit" value="search">
 		</form>	
 	</div>
@@ -37,14 +46,64 @@
 						."&RESPONSE-DATA-FORMAT=$responseFormat";
 
 			//finalurl construct
+			$i = 0;
+			//process keywords
 			$keywords = $_GET['keywords'];
-			$finalurl = "$basicurl"."&Keywords=$keywords";
+			$finalurl = $basicurl."&keywords=$keywords";
 
+
+			//process condition
 			$conditions = $_GET['conditions'];
-			foreach ($conditions as $condition){
-				$finalurl .="&Condition=$condition";
+			if($conditions){
+				$finalurl .= "&itemFilter($i).name=Condition";
+				foreach ($conditions as $key => $val){
+					$finalurl .="&itemFilter($i).value($key)=$val";
+				}
+				$i++;
+			}
+			
+
+			//process buying formats
+			$listingTypes = $_GET['listingTypes'];
+			if($listingTypes){
+				$finalurl .= "&itemFilter($i).name=ListingType";
+				foreach ($listingTypes as $key => $val){
+					$finalurl .="&itemFilter($i).value($key)=$val";
+				}
+				$i++;
 			}
 
+			//process returnAccept
+			$returnAccept = $_GET['returnAccept'];
+			if($returnAccept){
+				$finalurl .= "&itemFilter($i).name=ReturnsAcceptedOnly";
+				$finalurl .="&itemFilter($i).value(0)=$returnAccept";
+				$i++;
+			}
+
+			//process free shipping
+			$freeShipping = $_GET['freeShipping'];
+			if($freeShipping){
+				$finalurl .= "&itemFilter($i).name=FreeShippingOnly";
+				$finalurl .="&itemFilter($i).value(0)=$freeShipping";
+				$i++;
+			}
+
+			//process expedited shipping
+			$expeditedShopping = $_GET['expeditedShopping'];
+			if($expeditedShopping){
+				$finalurl .= "&itemFilter($i).name=ExpeditedShippingType";
+				$finalurl .="&itemFilter($i).value(0)=$expeditedShopping";
+				$i++;
+			}
+
+			//process shipping time
+			$shippingTime = $_GET['shippingTime'];
+			if($shippingTime){
+				$finalurl .= "&itemFilter($i).name=MaxHandlingTime";
+				$finalurl .="&itemFilter($i).value(0)=$shippingTime";
+				$i++;
+			}
 			
 
 			print $finalurl;
