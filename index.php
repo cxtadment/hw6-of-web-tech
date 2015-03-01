@@ -10,8 +10,8 @@
 	<div>
 		<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="get">
 			Key Words: <input type="text" name="keywords"><br>
-			Price Range: from $<input type="text" name="MinPrice">
-						 to $<input type="text" name="MaxPrice"><br>
+			Price Range: from $<input type="text" name="minPrice">
+						 to $<input type="text" name="maxPrice"><br>
 			Condition: <input type="checkbox" name="conditions[]" value="1000">New  
 					   <input type="checkbox" name="conditions[]" value="3000">Used 
 					   <input type="checkbox" name="conditions[]" value="4000">Very Good
@@ -23,12 +23,25 @@
 			Seller: <input type="checkbox" name="returnAccept" value="true">Buy It Now <br>
 			Shipping: <div>
 						  <input type="checkbox" name="freeShipping" value="true">Free Shipping<br>
-						  <input type="checkbox" name="expeditedShopping" value="Expedited">Expedited shipping available<br>
+						  <input type="checkbox" name="expeditedShipping" value="Expedited">Expedited shipping available<br>
 						  Max handling time(days): <input type="text" name="shippingTime"><br>
 					  </div>
+			Sorted by: <select name="sortOrder">
+							<option value="BestMatch" selected="selected">Best Match</option>
+							<option value="CurrentPriceHighest">Price: highest first</option>
+							<option value="CurrentPriceLowest">Price: lowest first</option>
+							<option value="PricePlusShippingHighest">Price + Shipping: highest first</option>
+							<option value="PricePlusShippingLowest">Price + Shipping: lowest first</option>
+					   </select><br>
+			Result Per Page: <select name="pagination">
+								<option value="5" selected="selected">5</option>
+								<option value="10">10</option>
+								<option value="15">15</option>
+								<option value="20">20</option>
+							 </select><br>
 			<input type="submit" name="submit" value="search">
 		</form>	
-	</div>
+	</div><br>
 	<?php 
 
 		if(isset($_GET['submit'])){
@@ -51,6 +64,20 @@
 			$keywords = $_GET['keywords'];
 			$finalurl = $basicurl."&keywords=$keywords";
 
+			//process Price Range
+			$minPrice = $_GET['minPrice'];
+			if($minPrice){
+				$finalurl .= "&itemFilter($i).name=MinPrice";
+				$finalurl .="&itemFilter($i).value(0)=$minPrice";
+				$i++;
+			}
+
+			$maxPrice = $_GET['maxPrice'];
+			if($maxPrice){
+				$finalurl .= "&itemFilter($i).name=MaxPrice";
+				$finalurl .="&itemFilter($i).value(0)=$maxPrice";
+				$i++;
+			}
 
 			//process condition
 			$conditions = $_GET['conditions'];
@@ -90,10 +117,10 @@
 			}
 
 			//process expedited shipping
-			$expeditedShopping = $_GET['expeditedShopping'];
-			if($expeditedShopping){
+			$expeditedShipping = $_GET['expeditedShipping'];
+			if($expeditedShipping){
 				$finalurl .= "&itemFilter($i).name=ExpeditedShippingType";
-				$finalurl .="&itemFilter($i).value(0)=$expeditedShopping";
+				$finalurl .="&itemFilter($i).value(0)=$expeditedShipping";
 				$i++;
 			}
 
@@ -104,11 +131,102 @@
 				$finalurl .="&itemFilter($i).value(0)=$shippingTime";
 				$i++;
 			}
-			
 
-			print $finalurl;
+			//process sorted by
+			$sortOrder = $_GET['sortOrder'];
+			$finalurl .= "&sortOrder=$sortOrder";
+
+			//process pagination
+			$pagination = $_GET['pagination'];
+			$finalurl .= "&paginationInput.entriesPerPage=$pagination";
+
+			// print $finalurl;
+
+			//load the call
+			$loads = simplexml_load_file($finalurl);
 			
+			//check if the resp has been loaded and if there is items in the result
+			if($loads && $loads->paginationOutput->totalEntries > 0){
+				//table build
+				$results .= $loads->paginationOutput->totalEntries . " Results for ".$keywords."<br />";
+				$results .= "<table border='1' width='700'>";
+
+				//traverse items
+				foreach($loads->searchResult->item as $item){
+					//process image
+					if($item->galleryURL){
+						$imageURL = $item->galleryURL;
+					}else{
+						$imageURL = "http://cs-server.usc.edu:45678/hw/hw6/ebay.jpg";
+					}
+
+					//receive all data
+					$title = $item->title;
+					$link = $item->viewItemURL;
+					$conditionDisplay = $item->condition->conditionDisplayName;
+					$topRated = $item->topRatedListing;
+					$buyingFormateDisplay = $item->listingInfo->listingType;
+					$returnAcceptDisplay = (($item->returnsAccepted)=='true')?'Seller Accepts return':'Seller doesn\'t accept return';
+					$shippingCost = $item->shippingInfo->shippingServiceCost;
+					$expeditedDisplay = (($item->shippingInfo->expeditedShipping)=='true')?'Expedited Shipping Available':'Expedited Shipping Not Available';
+					$shippingTimeDisplay = $item->shippingInfo->handlingTime;
+					$price = $item->sellingStatus->convertedCurrentPrice;
+					$location = $item->location;
+					$freeDisplay = ($shippingCost==0.0)?'FREE Shipping':'Shipping Not Free';
+
+					//process BuyingFormat
+					if($buyingFormateDisplay){
+						switch ($buyingFormateDisplay) {
+							case 'FixedPrice':
+								$buyingFormateDisplay = 'Buy It Now';
+								break;
+							
+							case 'StoreInventory':
+								$buyingFormateDisplay = 'Buy It Now';
+								break;
+
+							case 'Auction':
+								$buyingFormateDisplay = 'Auction';
+								break;
+
+							case 'Classified':
+								$buyingFormateDisplay = 'Classified Ad';
+								break;
+						}
+					}
+
+
+					$results .= "<tr>
+									<td width='30%'><img src=$imageURL></td>
+									<td>
+										<a href=$link>$title</a><br><br>
+										Condition: $conditionDisplay ";
+										if($topRated=='true'){
+											$results .= "<img src='http://cs-server.usc.edu:45678/hw/hw6/itemTopRated.jpg' height='50' width='40'>";
+										}
+
+					$results .= "        <br><br>
+										$buyingFormateDisplay<br><br>
+										$returnAcceptDisplay<br>
+										$freeDisplay -- $expeditedDisplay -- Handled for shipping in $shippingTimeDisplay day(s)<br><br>
+										Price: $$price ";
+										if($shippingCost>0){
+											$results .= "(+$$shippingCost for shipping) ";
+										}
+					$results .="
+										From $location
+									</td>
+								</tr>";
+
+
+				}
+
+				$results .= "</table>";
+			}else{
+				$results = "<p>No result found</p>";
+			}
 		}
 	?>
+	<?php echo $results;?>
 </body>
 </html>
