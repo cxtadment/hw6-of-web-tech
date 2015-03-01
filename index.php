@@ -9,35 +9,35 @@
 <body>
 	<div>
 		<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="get">
-			Key Words: <input type="text" name="keywords"><br>
-			Price Range: from $<input type="text" name="minPrice">
-						 to $<input type="text" name="maxPrice"><br>
-			Condition: <input type="checkbox" name="conditions[]" value="1000">New  
-					   <input type="checkbox" name="conditions[]" value="3000">Used 
-					   <input type="checkbox" name="conditions[]" value="4000">Very Good
-					   <input type="checkbox" name="conditions[]" value="5000">Good 
-					   <input type="checkbox" name="conditions[]" value="6000">Acceptable <br> 
-			Buying formats: <input type="checkbox" name="listingTypes[]" value="FixedPrice">Buy It Now
-							<input type="checkbox" name="listingTypes[]" value="Auction">Auction
-							<input type="checkbox" name="listingTypes[]" value="Classified">Classified Ads <br>
-			Seller: <input type="checkbox" name="returnAccept" value="true">Buy It Now <br>
+			Key Words: <input type="text" name="keywords" value=<?php echo $_GET['keywords']; ?>><br>
+			Price Range: from $<input type="text" name="minPrice" value=<?php echo $_GET['minPrice'];?>>
+						 to $<input type="text" name="maxPrice" value=<?php echo $_GET['maxPrice'];?>><br>
+			Condition: <input type="checkbox" name="conditions[]" value="1000" <?php foreach ($_GET['conditions'] as $val){if($val=='1000'){echo "checked='checked'";}}?>>New  
+					   <input type="checkbox" name="conditions[]" value="3000" <?php foreach ($_GET['conditions'] as $val){if($val=='3000'){echo "checked='checked'";}}?>>Used 
+					   <input type="checkbox" name="conditions[]" value="4000" <?php foreach ($_GET['conditions'] as $val){if($val=='4000'){echo "checked='checked'";}}?>>Very Good
+					   <input type="checkbox" name="conditions[]" value="5000" <?php foreach ($_GET['conditions'] as $val){if($val=='5000'){echo "checked='checked'";}}?>>Good 
+					   <input type="checkbox" name="conditions[]" value="6000" <?php foreach ($_GET['conditions'] as $val){if($val=='6000'){echo "checked='checked'";}}?>>Acceptable <br> 
+			Buying formats: <input type="checkbox" name="listingTypes[]" value="FixedPrice" <?php foreach ($_GET['listingTypes'] as $val){if($val=='FixedPrice'){echo "checked='checked'";}}?>>Buy It Now
+							<input type="checkbox" name="listingTypes[]" value="Auction" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Auction'){echo "checked='checked'";}}?>>Auction
+							<input type="checkbox" name="listingTypes[]" value="Classified" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Classified'){echo "checked='checked'";}}?>>Classified Ads <br>
+			Seller: <input type="checkbox" name="returnAccept" value="true" <?php if($_GET['returnAccept']=='true'){echo "checked='checked'";}?>>Buy It Now <br>
 			Shipping: <div>
-						  <input type="checkbox" name="freeShipping" value="true">Free Shipping<br>
-						  <input type="checkbox" name="expeditedShipping" value="Expedited">Expedited shipping available<br>
-						  Max handling time(days): <input type="text" name="shippingTime"><br>
+						  <input type="checkbox" name="freeShipping" value="true" <?php if($_GET['freeShipping']=='true'){echo "checked='checked'";}?>>Free Shipping<br>
+						  <input type="checkbox" name="expeditedShipping" value="Expedited" <?php if($_GET['expeditedShipping']=='Expedited'){echo "checked='checked'";}?>>Expedited shipping available<br>
+						  Max handling time(days): <input type="text" name="shippingTime" value=<?php echo $_GET['shippingTime'];?>><br>
 					  </div>
 			Sorted by: <select name="sortOrder">
-							<option value="BestMatch" selected="selected">Best Match</option>
-							<option value="CurrentPriceHighest">Price: highest first</option>
-							<option value="CurrentPriceLowest">Price: lowest first</option>
-							<option value="PricePlusShippingHighest">Price + Shipping: highest first</option>
-							<option value="PricePlusShippingLowest">Price + Shipping: lowest first</option>
+							<option value="BestMatch" <?php if($_GET['sortOrder']){if($_GET['sortOrder']=='BestMatch'){echo "selected='selected'";}}else{echo "selected='selected'";}?>>Best Match</option>
+							<option value="CurrentPriceHighest" <?php if($_GET['sortOrder']=='CurrentPriceHighest'){echo "selected='selected'";}?>>Price: highest first</option>
+							<option value="CurrentPriceLowest" <?php if($_GET['sortOrder']=='CurrentPriceLowest'){echo "selected='selected'";}?>>Price: lowest first</option>
+							<option value="PricePlusShippingHighest" <?php if($_GET['sortOrder']=='PricePlusShippingHighest'){echo "selected='selected'";}?>>Price + Shipping: highest first</option>
+							<option value="PricePlusShippingLowest" <?php if($_GET['sortOrder']=='PricePlusShippingLowest'){echo "selected='selected'";}?>>Price + Shipping: lowest first</option>
 					   </select><br>
 			Result Per Page: <select name="pagination">
-								<option value="5" selected="selected">5</option>
-								<option value="10">10</option>
-								<option value="15">15</option>
-								<option value="20">20</option>
+								<option value="5"  <?php if($_GET['pagination']){if($_GET['pagination']=='5'){echo "selected='selected'";}}else{echo "selected='selected'";}?>>5</option>
+								<option value="10" <?php if($_GET['pagination']=='10'){echo "selected='selected'";}?>>10</option>
+								<option value="15" <?php if($_GET['pagination']=='15'){echo "selected='selected'";}?>>15</option>
+								<option value="20" <?php if($_GET['pagination']=='20'){echo "selected='selected'";}?>>20</option>
 							 </select><br>
 			<input type="submit" name="submit" value="search">
 		</form>	
