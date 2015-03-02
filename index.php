@@ -4,44 +4,95 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<title>HW6</title>
+	<link rel="stylesheet" type="text/css" href="hw6.css">
+	<script type="text/javascript" src="hw6.js"></script> 
 </head>
 
 <body>
-	<div>
-		<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="get">
-			Key Words: <input type="text" name="keywords" value=<?php echo $_GET['keywords']; ?>><br>
-			Price Range: from $<input type="text" name="minPrice" value=<?php echo $_GET['minPrice'];?>>
-						 to $<input type="text" name="maxPrice" value=<?php echo $_GET['maxPrice'];?>><br>
-			Condition: <input type="checkbox" name="conditions[]" value="1000" <?php foreach ($_GET['conditions'] as $val){if($val=='1000'){echo "checked='checked'";}}?>>New  
-					   <input type="checkbox" name="conditions[]" value="3000" <?php foreach ($_GET['conditions'] as $val){if($val=='3000'){echo "checked='checked'";}}?>>Used 
-					   <input type="checkbox" name="conditions[]" value="4000" <?php foreach ($_GET['conditions'] as $val){if($val=='4000'){echo "checked='checked'";}}?>>Very Good
-					   <input type="checkbox" name="conditions[]" value="5000" <?php foreach ($_GET['conditions'] as $val){if($val=='5000'){echo "checked='checked'";}}?>>Good 
-					   <input type="checkbox" name="conditions[]" value="6000" <?php foreach ($_GET['conditions'] as $val){if($val=='6000'){echo "checked='checked'";}}?>>Acceptable <br> 
-			Buying formats: <input type="checkbox" name="listingTypes[]" value="FixedPrice" <?php foreach ($_GET['listingTypes'] as $val){if($val=='FixedPrice'){echo "checked='checked'";}}?>>Buy It Now
-							<input type="checkbox" name="listingTypes[]" value="Auction" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Auction'){echo "checked='checked'";}}?>>Auction
-							<input type="checkbox" name="listingTypes[]" value="Classified" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Classified'){echo "checked='checked'";}}?>>Classified Ads <br>
-			Seller: <input type="checkbox" name="returnAccept" value="true" <?php if($_GET['returnAccept']=='true'){echo "checked='checked'";}?>>Buy It Now <br>
-			Shipping: <div>
-						  <input type="checkbox" name="freeShipping" value="true" <?php if($_GET['freeShipping']=='true'){echo "checked='checked'";}?>>Free Shipping<br>
-						  <input type="checkbox" name="expeditedShipping" value="Expedited" <?php if($_GET['expeditedShipping']=='Expedited'){echo "checked='checked'";}?>>Expedited shipping available<br>
-						  Max handling time(days): <input type="text" name="shippingTime" value=<?php echo $_GET['shippingTime'];?>><br>
-					  </div>
-			Sorted by: <select name="sortOrder">
-							<option value="BestMatch" <?php if($_GET['sortOrder']){if($_GET['sortOrder']=='BestMatch'){echo "selected='selected'";}}else{echo "selected='selected'";}?>>Best Match</option>
-							<option value="CurrentPriceHighest" <?php if($_GET['sortOrder']=='CurrentPriceHighest'){echo "selected='selected'";}?>>Price: highest first</option>
-							<option value="CurrentPriceLowest" <?php if($_GET['sortOrder']=='CurrentPriceLowest'){echo "selected='selected'";}?>>Price: lowest first</option>
-							<option value="PricePlusShippingHighest" <?php if($_GET['sortOrder']=='PricePlusShippingHighest'){echo "selected='selected'";}?>>Price + Shipping: highest first</option>
-							<option value="PricePlusShippingLowest" <?php if($_GET['sortOrder']=='PricePlusShippingLowest'){echo "selected='selected'";}?>>Price + Shipping: lowest first</option>
-					   </select><br>
-			Result Per Page: <select name="pagination">
-								<option value="5"  <?php if($_GET['pagination']){if($_GET['pagination']=='5'){echo "selected='selected'";}}else{echo "selected='selected'";}?>>5</option>
-								<option value="10" <?php if($_GET['pagination']=='10'){echo "selected='selected'";}?>>10</option>
-								<option value="15" <?php if($_GET['pagination']=='15'){echo "selected='selected'";}?>>15</option>
-								<option value="20" <?php if($_GET['pagination']=='20'){echo "selected='selected'";}?>>20</option>
-							 </select><br>
-			<input type="submit" name="submit" value="search">
-		</form>	
-	</div><br>
+		<table class="outerborder">
+		<tr>
+			<td>
+				<div class="title">
+					<img src="http://cs-server.usc.edu:45678/hw/hw6/ebay.jpg" width="100" height="50">Shopping
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="get" id="ebay" onsubmit="return check()">
+				<table class="innerborder">
+					<tr>
+						<td>Key Words*:</td>
+						<td><input type="text" name="keywords" id="keywords" value=<?php echo $_GET['keywords']; ?>></td>
+					</tr>
+					<tr>
+						<td>Price Range:</td>
+						<td>from $<input type="text" name="minPrice" id="minPrice" value=<?php echo $_GET['minPrice'];?>>
+								 to $<input type="text" name="maxPrice" id="maxPrice" value=<?php echo $_GET['maxPrice'];?>></td>
+					</tr>
+					<tr>
+						<td>Condition:</td>
+						<td><input type="checkbox" name="conditions[]" value="1000" <?php foreach ($_GET['conditions'] as $val){if($val=='1000'){echo "checked='checked'";}}?>>New  
+							   <input type="checkbox" name="conditions[]" value="3000" <?php foreach ($_GET['conditions'] as $val){if($val=='3000'){echo "checked='checked'";}}?>>Used 
+							   <input type="checkbox" name="conditions[]" value="4000" <?php foreach ($_GET['conditions'] as $val){if($val=='4000'){echo "checked='checked'";}}?>>Very Good
+							   <input type="checkbox" name="conditions[]" value="5000" <?php foreach ($_GET['conditions'] as $val){if($val=='5000'){echo "checked='checked'";}}?>>Good 
+							   <input type="checkbox" name="conditions[]" value="6000" <?php foreach ($_GET['conditions'] as $val){if($val=='6000'){echo "checked='checked'";}}?>>Acceptable
+						</td>
+					</tr>
+					<tr>
+						<td>Buying formats:</td>
+						<td><input type="checkbox" name="listingTypes[]" value="FixedPrice" <?php foreach ($_GET['listingTypes'] as $val){if($val=='FixedPrice'){echo "checked='checked'";}}?>>Buy It Now
+									<input type="checkbox" name="listingTypes[]" value="Auction" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Auction'){echo "checked='checked'";}}?>>Auction
+									<input type="checkbox" name="listingTypes[]" value="Classified" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Classified'){echo "checked='checked'";}}?>>Classified Ads
+						</td>
+					</tr>
+					<tr>
+						<td>Seller:</td>
+						<td><input type="checkbox" name="returnAccept" value="true" <?php if($_GET['returnAccept']=='true'){echo "checked='checked'";}?>>Return accepted</td>
+					</tr>
+					<tr>
+						<td>Shipping:</td>
+						<td><input type="checkbox" name="freeShipping" value="true" <?php if($_GET['freeShipping']=='true'){echo "checked='checked'";}?>>Free Shipping</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="checkbox" name="expeditedShipping" value="Expedited" <?php if($_GET['expeditedShipping']=='Expedited'){echo "checked='checked'";}?>>Expedited shipping available<br>
+							Max handling time(days): <input type="text" name="shippingTime" id="shippingTime" value=<?php echo $_GET['shippingTime'];?>></td>
+					</tr>
+					<tr>
+						<td>Sorted by:</td>
+						<td><select name="sortOrder">
+									<option value="BestMatch" <?php if($_GET['sortOrder']){if($_GET['sortOrder']=='BestMatch'){echo "selected='selected'";}}else{echo "selected='selected'";}?>>Best Match</option>
+									<option value="CurrentPriceHighest" <?php if($_GET['sortOrder']=='CurrentPriceHighest'){echo "selected='selected'";}?>>Price: highest first</option>
+									<option value="CurrentPriceLowest" <?php if($_GET['sortOrder']=='CurrentPriceLowest'){echo "selected='selected'";}?>>Price: lowest first</option>
+									<option value="PricePlusShippingHighest" <?php if($_GET['sortOrder']=='PricePlusShippingHighest'){echo "selected='selected'";}?>>Price + Shipping: highest first</option>
+									<option value="PricePlusShippingLowest" <?php if($_GET['sortOrder']=='PricePlusShippingLowest'){echo "selected='selected'";}?>>Price + Shipping: lowest first</option>
+							   </select>
+						</td>
+					</tr>
+					<tr>
+						<td>Result Per Page:</td>
+						<td><select name="pagination">
+										<option value="5"  <?php if($_GET['pagination']){if($_GET['pagination']=='5'){echo "selected='selected'";}}else{echo "selected='selected'";}?>>5</option>
+										<option value="10" <?php if($_GET['pagination']=='10'){echo "selected='selected'";}?>>10</option>
+										<option value="15" <?php if($_GET['pagination']=='15'){echo "selected='selected'";}?>>15</option>
+										<option value="20" <?php if($_GET['pagination']=='20'){echo "selected='selected'";}?>>20</option>
+									 </select>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td align="right">
+							<input type="button" name="clear" value="clear" onclick="reset()">
+							<input type="submit" name="submit" value="search">
+						</td>
+					</tr>
+			</table>
+			</form>
+			</td>
+		</tr>
+	</table><br>
+	
 	<?php 
 
 		if(isset($_GET['submit'])){
@@ -148,8 +199,8 @@
 			//check if the resp has been loaded and if there is items in the result
 			if($loads && $loads->paginationOutput->totalEntries > 0){
 				//table build
-				$results .= $loads->paginationOutput->totalEntries . " Results for ".$keywords."<br />";
-				$results .= "<table border='1' width='700'>";
+				$results .="<div class='resultTitle'>".$loads->paginationOutput->totalEntries . " Results for ".$keywords."</div><br />";
+				$results .= "<table border='1' class='result'>";
 
 				//traverse items
 				foreach($loads->searchResult->item as $item){
@@ -204,7 +255,6 @@
 										if($topRated=='true'){
 											$results .= "<img src='http://cs-server.usc.edu:45678/hw/hw6/itemTopRated.jpg' height='50' width='40'>";
 										}
-
 					$results .= "        <br><br>
 										$buyingFormateDisplay<br><br>
 										$returnAcceptDisplay<br>
@@ -213,8 +263,7 @@
 										if($shippingCost>0){
 											$results .= "(+$$shippingCost for shipping) ";
 										}
-					$results .="
-										From $location
+					$results .="		From $location
 									</td>
 								</tr>";
 
