@@ -1,8 +1,9 @@
 .outerborder{
-	border-style: solid;
-    border-width: 1px;
+	  border-style: solid;
+    border-width: 2px;
     margin-left: auto;
   	margin-right: auto;
+    border-color: black;
 }
 
 .title{
@@ -13,21 +14,50 @@
 	border-style: solid;
     border-width: 2px;
     margin: 7px;
+    width:650px;
+    border-color: black;
+}
+
+.resultOutBorder{
+    border-style: solid;
+    border-width: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: black;
 }
 
 hr {
 	height: 1px;
 }
 tr.border_bottom td {
-  border-bottom:1pt solid black;
+  border-bottom:1pt solid #C0C0C0;
 }
 
+
 .result{
-    margin-left: auto;
-    margin-right: auto;
-    width: 700;
+    margin: 7px;
+    width: 650px;
+    border:1px solid #C0C0C0;
+}
+
+#leftDisplay {
+  float: left;
+  width: 180px;
+}
+
+#rightDisplay{
+  float: right;
+  width: 445px;
+}
+
+.italic {
+    font-style: italic;
+}
+
+#noResult{
+  text-align: center;
 }
 
 .resultTitle{
-  text-align: center;;
+  text-align: center;
 }

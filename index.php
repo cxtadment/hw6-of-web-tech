@@ -21,16 +21,16 @@
 			<td>
 				<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="get" id="ebay" onsubmit="return check()">
 				<table class="innerborder">
-					<tr>
+					<tr class="border_bottom">
 						<td>Key Words*:</td>
 						<td><input type="text" name="keywords" id="keywords" value="<?php echo $_GET['keywords']; ?>"></td>
 					</tr>
-					<tr>
+					<tr class="border_bottom">
 						<td>Price Range:</td>
 						<td>from $<input type="text" name="minPrice" id="minPrice" value=<?php echo $_GET['minPrice'];?>>
 								 to $<input type="text" name="maxPrice" id="maxPrice" value=<?php echo $_GET['maxPrice'];?>></td>
 					</tr>
-					<tr>
+					<tr class="border_bottom">
 						<td>Condition:</td>
 						<td><input type="checkbox" name="conditions[]" value="1000" <?php foreach ($_GET['conditions'] as $val){if($val=='1000'){echo "checked='checked'";}}?>>New  
 							   <input type="checkbox" name="conditions[]" value="3000" <?php foreach ($_GET['conditions'] as $val){if($val=='3000'){echo "checked='checked'";}}?>>Used 
@@ -39,27 +39,27 @@
 							   <input type="checkbox" name="conditions[]" value="6000" <?php foreach ($_GET['conditions'] as $val){if($val=='6000'){echo "checked='checked'";}}?>>Acceptable
 						</td>
 					</tr>
-					<tr>
+					<tr class="border_bottom">
 						<td>Buying formats:</td>
 						<td><input type="checkbox" name="listingTypes[]" value="FixedPrice" <?php foreach ($_GET['listingTypes'] as $val){if($val=='FixedPrice'){echo "checked='checked'";}}?>>Buy It Now
 									<input type="checkbox" name="listingTypes[]" value="Auction" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Auction'){echo "checked='checked'";}}?>>Auction
 									<input type="checkbox" name="listingTypes[]" value="Classified" <?php foreach ($_GET['listingTypes'] as $val){if($val=='Classified'){echo "checked='checked'";}}?>>Classified Ads
 						</td>
 					</tr>
-					<tr>
+					<tr class="border_bottom">
 						<td>Seller:</td>
 						<td><input type="checkbox" name="returnAccept" value="true" <?php if($_GET['returnAccept']=='true'){echo "checked='checked'";}?>>Return accepted</td>
 					</tr>
-					<tr>
+					<tr class="border_bottom">
 						<td>Shipping:</td>
 						<td><input type="checkbox" name="freeShipping" value="true" <?php if($_GET['freeShipping']=='true'){echo "checked='checked'";}?>>Free Shipping</td>
 					</tr>
-					<tr>
+					<tr class="border_bottom">
 						<td></td>
 						<td><input type="checkbox" name="expeditedShipping" value="Expedited" <?php if($_GET['expeditedShipping']=='Expedited'){echo "checked='checked'";}?>>Expedited shipping available<br>
 							Max handling time(days): <input type="text" name="shippingTime" id="shippingTime" value=<?php echo $_GET['shippingTime'];?>></td>
 					</tr>
-					<tr>
+					<tr class="border_bottom">
 						<td>Sorted by:</td>
 						<td><select name="sortOrder">
 									<option value="BestMatch" <?php if($_GET['sortOrder']){if($_GET['sortOrder']=='BestMatch'){echo "selected='selected'";}}else{echo "selected='selected'";}?>>Best Match</option>
@@ -89,6 +89,9 @@
 			</table>
 			</form>
 			</td>
+		</tr>
+		<tr>
+			<td><br><div id="noResult"></div></td>
 		</tr>
 	</table><br>
 	
@@ -198,8 +201,9 @@
 			//check if the resp has been loaded and if there is items in the result
 			if($loads && $loads->paginationOutput->totalEntries > 0){
 				//table build
-				$results .="<div class='resultTitle'>".$loads->paginationOutput->totalEntries . " Results for ".$keywords."</div><br />";
-				$results .= "<table border='1' class='result'>";
+				$results .="<table class='resultOutBorder'>";
+				$results .="<tr><td><div class='resultTitle'><b>".$loads->paginationOutput->totalEntries . " Results for <span style='font-style: italic'>".$keywords."</span></b></div></td></tr>";
+				$results .= "<tr><td><table class='result'>";
 
 				//traverse items
 				foreach($loads->searchResult->item as $item){
@@ -246,32 +250,34 @@
 					}
 
 
-					$results .= "<tr>
-									<td width='30%'><img src=$imageURL></td>
+					$results .= "<tr class='border_bottom'>
 									<td>
+									<div id = 'leftDisplay'><img width='178px' height='178px' src=$imageURL></div>
+									<div id = 'rightDisplay'>
 										<a href=$link>$title</a><br><br>
-										Condition: $conditionDisplay ";
+										<b>Condition:</b> $conditionDisplay ";
 										if($topRated=='true'){
 											$results .= "<img src='http://cs-server.usc.edu:45678/hw/hw6/itemTopRated.jpg' height='50' width='40'>";
 										}
 					$results .= "        <br><br>
-										$buyingFormateDisplay<br><br>
+										<b>$buyingFormateDisplay</b><br><br>
 										$returnAcceptDisplay<br>
 										$freeDisplay -- $expeditedDisplay -- Handled for shipping in $shippingTimeDisplay day(s)<br><br>
-										Price: $$price ";
+										<b>Price: $$price </b>";
 										if($shippingCost>0){
-											$results .= "(+$$shippingCost for shipping) ";
+											$results .= "<b>(+$$shippingCost for shipping)</b> ";
 										}
-					$results .="		From $location
+					$results .="		<span style='font-style: italic'>From $location</span>
+									</div>
 									</td>
 								</tr>";
 
 
 				}
 
-				$results .= "</table>";
+				$results .= "</table></td></tr></table>";
 			}else{
-				$results = "<p>No result found</p>";
+				echo "<script type='text/javascript'>document.getElementById('noResult').innerHTML='<h2><b>No results found</b></h2>';</script>";
 			}
 		}
 
