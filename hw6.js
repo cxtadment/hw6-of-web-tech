@@ -1,6 +1,33 @@
-function reset(){
-	document.getElementById("ebay").reset();
+function resetsb(){
+
+	document.getElementById("sbform").innerHTML="";
+	document.getElementById("keywords").value="";
+	document.getElementById("minPrice").value="";
+	document.getElementById("maxPrice").value="";
+	document.getElementById("newc").checked="";
+	document.getElementById("usedc").checked="";
+	document.getElementById("verygoodc").checked="";
+	document.getElementById("goodc").checked="";
+	document.getElementById("acceptc").checked="";
+	document.getElementById("fixedPrice").checked="";
+	document.getElementById("auction").checked="";
+	document.getElementById("classified").checked="";
+	document.getElementById("returnAccept").checked="";
+	document.getElementById("freeShipping").checked="";
+	document.getElementById("expedited").checked="";
+	document.getElementById("shippingTime").value="";
+	document.getElementById("bestMatch").selected="selected";
+	document.getElementById("priceHighest").selected="";
+	document.getElementById("priceShopHighest").selected="";
+	document.getElementById("priceShopLowest").selected="";
+	document.getElementById("p5").selected="selected";
+	document.getElementById("p10").selected="";
+	document.getElementById("p15").selected="";
+	document.getElementById("p20").selected="";
+	document.getElementById("noResult").innerHTML="";
+
 }
+
 
 function check(){
 	//keywords validation
